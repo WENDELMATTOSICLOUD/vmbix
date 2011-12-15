@@ -1,0 +1,14 @@
+lib.dir=lib
+pkgname=net.djarvur.vmbix.
+# pkgname=
+main-class=${pkgname}VmBix
+jar.dir=build/jar
+ant.project.name=vmbix
+store.jar.name=${ant.project.name}
+application.title=${ant.project.name}
+java.src=src/java
+rpmbased.src=src/rpm-based
+
+downloaded=downloaded
+jargsurl=http://sourceforge.net/projects/jargs/files/latest/download?source=files
+vijavaurl=http://sourceforge.net/projects/vijava/files/latest/download?source=files
