@@ -85,6 +85,9 @@
 		<copy todir="store/rmp-based/usr/local/vmbix">
 			<fileset dir="${jar.dir}"/>
 		</copy>
+		<copy todir="store/zabbix_templates">
+			<fileset dir="src/zabbix_templates"/>
+		</copy>
 	</target>
 	
 	<target name="clean">
