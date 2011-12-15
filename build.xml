@@ -77,22 +77,29 @@
 	<target name="get.libs" depends="get.vijava, get.jargs"/>
 	
 	<target name="store">
-		<delete dir="store"/>
-		<mkdir dir="store/rmp-based"/>
-		<copy todir="store/rmp-based">
+		<delete dir="${store.dir}"/>
+		<mkdir dir="${store.dir}/rmp-based"/>
+		<copy todir="${store.dir}/rmp-based">
 			<fileset dir="${rpmbased.src}"/>
 		</copy>
-		<copy todir="store/rmp-based/usr/local/vmbix">
+		<copy todir="${store.dir}/rmp-based/usr/local/vmbix">
 			<fileset dir="${jar.dir}"/>
 		</copy>
-		<copy todir="store/zabbix_templates">
+		<copy todir="${store.dir}/zabbix_templates">
 			<fileset dir="src/zabbix_templates"/>
 		</copy>
 	</target>
 	
+	<target name="zip">
+		<delete file="${store.dir}.zip"/>
+		<zip destfile="${store.dir}.zip" basedir="${store.dir}" compress="true" level="9" keepcompression="true"/>
+	</target>
 	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.zip"/>
+		</delete>
 		<delete dir="build"/>
-		<delete dir="store"/>
+		<delete dir="${store.dir}"/>
 	</target>
 	
 	<target name="clean.all" depends="clean">
@@ -100,7 +107,7 @@
 		<delete dir="${lib.dir}"/>
 	</target>
 	
-	<target name="make" depends="compile, jar, store"/>
+	<target name="make" depends="compile, jar, store, zip"/>
 	
 	<target name="all" depends="get.libs, compile, jar, store"/>
 	

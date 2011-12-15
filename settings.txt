@@ -1,3 +1,4 @@
+ver=beta-0.0.1
 lib.dir=lib
 pkgname=net.djarvur.vmbix.
 # pkgname=
@@ -6,6 +7,7 @@ jar.dir=build/jar
 ant.project.name=vmbix
 store.jar.name=${ant.project.name}
 application.title=${ant.project.name}
+store.dir=VmBix-${ver}
 java.src=src/java
 rpmbased.src=src/rpm-based
 
