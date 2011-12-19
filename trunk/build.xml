@@ -98,6 +98,9 @@
 		<delete>
 			<fileset dir="." includes="*.zip"/>
 		</delete>
+		<delete verbose="true">
+			<fileset dir="." includes="./${store.prefix}*"/>
+		</delete>
 		<delete dir="build"/>
 		<delete dir="${store.dir}"/>
 	</target>
