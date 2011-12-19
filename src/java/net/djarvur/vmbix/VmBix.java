@@ -186,12 +186,16 @@ public class VmBix {
     }
     
     public static synchronized void updateConnection() throws IOException{
+        long start = System.currentTimeMillis();
         serviceInstance = new ServiceInstance(new URL(sdkUrl), uname, passwd, true);
         if (serviceInstance == null) {
-            System.out.println("serviceInstance in null!");
+            System.out.println("serviceInstance in null! Connection failed.");
+            return;
         }
         Folder rootFolder = serviceInstance.getRootFolder();
         inventoryNavigator = new InventoryNavigator(serviceInstance.getRootFolder());
+        long end = System.currentTimeMillis();
+        System.out.println("Connected to " + sdkUrl + ", time taken:" + (end-start) + "ms");
     }
     
     public static synchronized void shutdown() {
@@ -233,13 +237,13 @@ public class VmBix {
     }
     
     static void server() throws IOException {
-        long start = System.currentTimeMillis();
+        // long start = System.currentTimeMillis();
         updateConnection();
         System.out.println("starting server on port");
         ServerSocket listen = new ServerSocket (port);//(port, backlog, bindaddr)
-        System.out.println("port opened");
-        long end = System.currentTimeMillis();
-        System.out.println("time taken:" + (end-start));
+        System.out.println("port opened, server started");
+        // long end = System.currentTimeMillis();
+        // System.out.println("Connected to " + sdkUrl + ", time taken:" + (end-start) + "ms");
         while (true) {
             Socket connected = listen.accept();
             // System.out.println("got connection from " 
