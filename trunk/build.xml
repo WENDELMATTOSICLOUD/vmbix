@@ -98,9 +98,20 @@
 		<delete>
 			<fileset dir="." includes="*.zip"/>
 		</delete>
+		<!-- <echo>store.prefix=${store.prefix}</echo>
+
+		<pathconvert refid="ds" property="includes" pathsep="${line.separator}">
+			<regexpmapper from="(^.*$)" to="\1${file.separator}**" />
+		</pathconvert>
+		<echo file="includesfile">${includes}</echo>
 		<delete verbose="true">
-			<fileset dir="." includes="./${store.prefix}*"/>
-		</delete>
+			<fileset dir="." id="storedir">
+			    <filename regex="./${store.prefix}*"/>
+			</fileset>
+			<exclude name="src/*"/>
+			<exclude name="./^${store.prefix}"/>
+				<resource name="${store.prefix}*"/>
+		</delete> -->
 		<delete dir="build"/>
 		<delete dir="${store.dir}"/>
 	</target>
