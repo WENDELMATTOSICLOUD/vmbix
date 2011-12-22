@@ -285,28 +285,46 @@ public class VmBix {
         }
 
         private void checkAllPatterns (String string, PrintWriter out) throws IOException {
-            Pattern pStatus         = Pattern.compile("^(?:\\s*ZBXD.)?.*status\\[(.+)\\]"           );
-            Pattern pHostCpuUsed    = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),used\\]" );
-            Pattern pHostCpuTotal   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),total\\]" );
-            Pattern pHostCpuCores   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),cores\\]" );
-            Pattern pHostMemUsed    = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),used\\]"      );
-            Pattern pHostMemTotal   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),total\\]"     );
-            Pattern pVmCpuUsed      = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),used\\]");
-            Pattern pVmCpuTotal     = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),total\\]");
-            Pattern pDatastoreFree  = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),free\\]" );
-            Pattern pDatastoreTotal = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),total\\]" );
+            Pattern pStatus                = Pattern.compile("^(?:\\s*ZBXD.)?.*status\\[(.+)\\]"                    );
+            Pattern pHostCpuUsed           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),used\\]"     );
+            Pattern pHostCpuTotal          = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),total\\]"    );
+            Pattern pHostCpuCores          = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),cores\\]"    );
+            Pattern pHostMemUsed           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),used\\]"         );
+            Pattern pHostMemTotal          = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),total\\]"        );
+            Pattern pVmCpuUsed             = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),used\\]"      );
+            Pattern pVmCpuTotal            = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),total\\]"     );
+            Pattern pVmMemPrivate          = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),private\\]"          );
+            Pattern pVmMemShared           = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),shared\\]"           );
+            Pattern pVmMemSwapped          = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),swapped\\]"          );
+            Pattern pVmMemCompressed       = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),compressed\\]"       );
+            Pattern pVmMemOverheadConsumed = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),overheadConsumed\\]" );
+            Pattern pVmMemConsumed         = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),consumed\\]"         );
+            Pattern pVmMemBalooned         = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),balooned\\]"         );
+            Pattern pVmMemActive           = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),active\\]"           );
+            Pattern pVmMemSize             = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),total\\]"            );
+            Pattern pDatastoreFree         = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),free\\]"     );
+            Pattern pDatastoreTotal        = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),total\\]"    );
 
             String found;
-            found = checkPattern(pStatus         ,string); if (found != null) { getHostStatus        (found, out); return; }
-            found = checkPattern(pHostCpuUsed    ,string); if (found != null) { getHostCpuUsed       (found, out); return; }
-            found = checkPattern(pHostCpuTotal   ,string); if (found != null) { getHostCpuTotal      (found, out); return; }
-            found = checkPattern(pHostMemUsed    ,string); if (found != null) { getHostMemUsed       (found, out); return; }
-            found = checkPattern(pHostMemTotal   ,string); if (found != null) { getHostMemTotal      (found, out); return; }
-            found = checkPattern(pVmCpuUsed      ,string); if (found != null) { getVmCpuUsed         (found, out); return; }
-            found = checkPattern(pVmCpuTotal     ,string); if (found != null) { getVmCpuTotal        (found, out); return; }
-            found = checkPattern(pHostCpuCores   ,string); if (found != null) { getHostCpuCores      (found, out); return; }
-            found = checkPattern(pDatastoreFree  ,string); if (found != null) { getDatastoreSizeFree (found, out); return; }
-            found = checkPattern(pDatastoreTotal ,string); if (found != null) { getDatastoreSizeTotal(found, out); return; }
+            found = checkPattern(pStatus                ,string); if (found != null) { getHostStatus            (found, out); return; }
+            found = checkPattern(pHostCpuUsed           ,string); if (found != null) { getHostCpuUsed           (found, out); return; }
+            found = checkPattern(pHostCpuTotal          ,string); if (found != null) { getHostCpuTotal          (found, out); return; }
+            found = checkPattern(pHostMemUsed           ,string); if (found != null) { getHostMemUsed           (found, out); return; }
+            found = checkPattern(pHostMemTotal          ,string); if (found != null) { getHostMemTotal          (found, out); return; }
+            found = checkPattern(pVmCpuUsed             ,string); if (found != null) { getVmCpuUsed             (found, out); return; }
+            found = checkPattern(pVmCpuTotal            ,string); if (found != null) { getVmCpuTotal            (found, out); return; }
+            found = checkPattern(pVmMemPrivate          ,string); if (found != null) { getVmMemPrivate          (found, out); return; }
+            found = checkPattern(pVmMemShared           ,string); if (found != null) { getVmMemShared           (found, out); return; }
+            found = checkPattern(pVmMemSwapped          ,string); if (found != null) { getVmMemSwapped          (found, out); return; }
+            found = checkPattern(pVmMemCompressed       ,string); if (found != null) { getVmMemCompressed       (found, out); return; }
+            found = checkPattern(pVmMemOverheadConsumed ,string); if (found != null) { getVmMemOverheadConsumed (found, out); return; }
+            found = checkPattern(pVmMemConsumed         ,string); if (found != null) { getVmMemConsumed         (found, out); return; }
+            found = checkPattern(pVmMemBalooned         ,string); if (found != null) { getVmMemBalooned         (found, out); return; }
+            found = checkPattern(pVmMemActive           ,string); if (found != null) { getVmMemActive           (found, out); return; }
+            found = checkPattern(pVmMemSize             ,string); if (found != null) { getVmMemSize             (found, out); return; }
+            found = checkPattern(pHostCpuCores          ,string); if (found != null) { getHostCpuCores          (found, out); return; }
+            found = checkPattern(pDatastoreFree         ,string); if (found != null) { getDatastoreSizeFree     (found, out); return; }
+            found = checkPattern(pDatastoreTotal        ,string); if (found != null) { getDatastoreSizeTotal    (found, out); return; }
             
             System.out.println("String '" + string + "' not supported");
             out.print("ZBX_NOTSUPPORTED\n");
@@ -340,7 +358,7 @@ public class VmBix {
             return me;
         }
 
-        private Integer getHostMHZ (HostSystem host) throws IOException {
+        private Integer getHostMHZ            (HostSystem host) throws IOException {
             HostListSummary hls = host.getSummary();
             HostHardwareSummary hosthwi = hls.getHardware();
             Integer mhz = hosthwi.getCpuMhz();
@@ -350,7 +368,7 @@ public class VmBix {
             return mhz;
         }
         
-        private void getHostStatus(String hostName, PrintWriter out) throws IOException {
+        private void getHostStatus            (String hostName, PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
             Integer intStatus;
@@ -377,7 +395,7 @@ public class VmBix {
             out.flush();
         }
         
-        private void getHostCpuUsed (String hostName, PrintWriter out) throws IOException {
+        private void getHostCpuUsed           (String hostName, PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
             Integer usedMhz;
@@ -403,7 +421,7 @@ public class VmBix {
             out.flush();
         }
         
-        private void getHostCpuTotal (String hostName, PrintWriter out) throws IOException {
+        private void getHostCpuTotal          (String hostName, PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
             Integer totalMhz;
@@ -422,7 +440,7 @@ public class VmBix {
             out.flush();
         }
         
-        private void getHostCpuCores (String hostName, PrintWriter out) throws IOException {
+        private void getHostCpuCores          (String hostName, PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
             Short cores;
@@ -446,7 +464,7 @@ public class VmBix {
             out.flush();
         }
         
-        private void getHostMemUsed  (String hostName, PrintWriter out) throws IOException {
+        private void getHostMemUsed           (String hostName, PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
             Integer usedMhz;
@@ -472,7 +490,7 @@ public class VmBix {
             out.flush();
         }
         
-        private void getHostMemTotal (String hostName, PrintWriter out) throws IOException {
+        private void getHostMemTotal          (String hostName, PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
             Long totalMemBytes;
@@ -497,7 +515,7 @@ public class VmBix {
             out.flush();
         }
 
-        private void getVmCpuUsed  (String vmName, PrintWriter out) throws IOException {
+        private void getVmCpuUsed             (String vmName,   PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
             Integer usedMhz;
@@ -524,7 +542,7 @@ public class VmBix {
             out.flush();
         }
         
-        private void getVmCpuTotal (String vmName, PrintWriter out) throws IOException {
+        private void getVmCpuTotal            (String vmName,   PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
             Integer mhz;
@@ -553,7 +571,187 @@ public class VmBix {
             out.flush();
         }
         
-        private void getDatastoreSizeFree (String dsName, PrintWriter out) throws IOException {
+        private void getVmMemPrivate          (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Integer amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = 0;
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineQuickStats vmQuickStats = vmSummary.getQuickStats();
+
+                amount = vmQuickStats.getPrivateMemory();
+                if (amount == null) { amount = 0; }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+
+        private void getVmMemShared           (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Integer amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = 0;
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineQuickStats vmQuickStats = vmSummary.getQuickStats();
+
+                amount = vmQuickStats.getSharedMemory();
+                if (amount == null) { amount = 0; }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+
+        private void getVmMemSwapped          (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Integer amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = 0;
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineQuickStats vmQuickStats = vmSummary.getQuickStats();
+
+                amount = vmQuickStats.getSwappedMemory();
+                if (amount == null) { amount = 0; }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+
+        private void getVmMemCompressed       (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Long amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = new Long(0);
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineQuickStats vmQuickStats = vmSummary.getQuickStats();
+
+                amount = vmQuickStats.getCompressedMemory();
+                if (amount == null) { amount = new Long(0); }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+
+        private void getVmMemOverheadConsumed (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Integer amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = 0;
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineQuickStats vmQuickStats = vmSummary.getQuickStats();
+
+                amount = vmQuickStats.getConsumedOverheadMemory();
+                if (amount == null) { amount = 0; }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+
+        private void getVmMemConsumed         (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Integer amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = 0;
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineQuickStats vmQuickStats = vmSummary.getQuickStats();
+
+                amount = vmQuickStats.getHostMemoryUsage();
+                if (amount == null) { amount = 0; }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+
+        private void getVmMemBalooned         (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Integer amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = 0;
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineQuickStats vmQuickStats = vmSummary.getQuickStats();
+
+                amount = vmQuickStats.getBalloonedMemory();
+                if (amount == null) { amount = 0; }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+
+        private void getVmMemActive           (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Integer amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = 0;
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineQuickStats vmQuickStats = vmSummary.getQuickStats();
+
+                amount = vmQuickStats.getGuestMemoryUsage();
+                if (amount == null) { amount = 0; }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+
+        private void getVmMemSize             (String vmName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            VirtualMachine vm = (VirtualMachine)getManagedEntityByName(vmName,"VirtualMachine");
+            Integer amount;
+            if (vm == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No vm named '" + vmName + "' found\n");
+                amount = 0;
+            } else {
+                VirtualMachineSummary vmSummary = vm.getSummary();
+                VirtualMachineConfigSummary vmConfigSum = vmSummary.getConfig();
+
+                amount = vmConfigSum.getMemorySizeMB();
+                if (amount == null) { amount = 0; }
+                long end = System.currentTimeMillis();
+            }
+            out.print(amount + "\n");
+            out.flush();
+        }
+        
+        private void getDatastoreSizeFree     (String dsName,   PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             Datastore ds = (Datastore)getManagedEntityByName(dsName,"Datastore");
             Long freeSpace;
@@ -575,7 +773,7 @@ public class VmBix {
             out.flush();
         }
 
-        private void getDatastoreSizeTotal (String dsName, PrintWriter out) throws IOException {
+        private void getDatastoreSizeTotal    (String dsName,   PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             Datastore ds = (Datastore)getManagedEntityByName(dsName,"Datastore");
             Long capacity;
