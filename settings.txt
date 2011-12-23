@@ -15,3 +15,7 @@ rpmbased.src=src/rpm-based
 downloaded=downloaded
 jargsurl=http://sourceforge.net/projects/jargs/files/latest/download?source=files
 vijavaurl=http://sourceforge.net/projects/vijava/files/latest/download?source=files
+
+cheks.cmd=cat ${java.src}/net/djarvur/vmbix/VmBix.java |grep "Pattern p[A-Z]"|cut -d "*" -f 3|sed -E 's/\\\\//g;s/(.*)\\(.*\\)(.*)"(.*)/\\1name\\2/g'
+
+# cat src/java/net/djarvur/vmbix/VmBix.java |grep "Pattern p[A-Z]"|cut -d "*" -f 3|sed -E 's/\\//g;s/(.*)\(.*\)(.*)"(.*)/\1name\2/g'
