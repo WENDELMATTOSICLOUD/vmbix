@@ -285,33 +285,33 @@ public class VmBix {
         }
 
         private void checkAllPatterns                (String string, PrintWriter out  ) throws IOException {
-            Pattern pStatus                 = Pattern.compile("^(?:\\s*ZBXD.)?.*status\\[(.+)\\]"                            );
-            Pattern pHostCpuUsed            = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),used\\]"             );
-            Pattern pHostCpuTotal           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),total\\]"            );
-            Pattern pHostCpuCores           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),cores\\]"            );
-            Pattern pHostMemUsed            = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),used\\]"                 );
-            Pattern pHostMemTotal           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),total\\]"                );
-            Pattern pHostMemStatsPrivate    = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),private\\]"          );
-            Pattern pHostMemStatsShared     = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),shared\\]"           );
-            Pattern pHostMemStatsSwapped    = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),swapped\\]"          );
-            Pattern pHostMemStatsCompressed = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),compressed\\]"       );
-            Pattern pHostMemStatsOverhCons  = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),overheadConsumed\\]" );
-            Pattern pHostMemStatsConsumed   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),consumed\\]"         );
-            Pattern pHostMemStatsBalooned   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),balooned\\]"         );
-            Pattern pHostMemStatsActive     = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),active\\]"           );            
-            Pattern pVmCpuUsed              = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),used\\]"              );
-            Pattern pVmCpuTotal             = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),total\\]"             );
-            Pattern pVmMemPrivate           = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),private\\]"                  );
-            Pattern pVmMemShared            = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),shared\\]"                   );
-            Pattern pVmMemSwapped           = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),swapped\\]"                  );
-            Pattern pVmMemCompressed        = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),compressed\\]"               );
-            Pattern pVmMemOverheadConsumed  = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),overheadConsumed\\]"         );
-            Pattern pVmMemConsumed          = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),consumed\\]"                 );
-            Pattern pVmMemBalooned          = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),balooned\\]"                 );
-            Pattern pVmMemActive            = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),active\\]"                   );
-            Pattern pVmMemSize              = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),total\\]"                    );
-            Pattern pDatastoreFree          = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),free\\]"             );
-            Pattern pDatastoreTotal         = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),total\\]"            );
+            Pattern pStatus                 = Pattern.compile("^(?:\\s*ZBXD.)?.*status\\[(.+)\\]"                            );        // :checks host status (not vm)
+            Pattern pHostCpuUsed            = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),used\\]"             );        // 
+            Pattern pHostCpuTotal           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),total\\]"            );        // 
+            Pattern pHostCpuCores           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),cores\\]"            );        // 
+            Pattern pHostMemUsed            = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),used\\]"                 );        // 
+            Pattern pHostMemTotal           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),total\\]"                );        // 
+            Pattern pHostMemStatsPrivate    = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),private\\]"          );        // :this is a heavy check. Counts average private          memory usage in % for all powered on vms.
+            Pattern pHostMemStatsShared     = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),shared\\]"           );        // :this is a heavy check. Counts average shared           memory usage in % for all powered on vms.
+            Pattern pHostMemStatsSwapped    = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),swapped\\]"          );        // :this is a heavy check. Counts average swapped          memory usage in % for all powered on vms.
+            Pattern pHostMemStatsCompressed = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),compressed\\]"       );        // :this is a heavy check. Counts average compressed       memory usage in % for all powered on vms.
+            Pattern pHostMemStatsOverhCons  = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),overheadConsumed\\]" );        // :this is a heavy check. Counts average overheadConsumed memory usage in % for all powered on vms.
+            Pattern pHostMemStatsConsumed   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),consumed\\]"         );        // :this is a heavy check. Counts average consumed         memory usage in % for all powered on vms.
+            Pattern pHostMemStatsBalooned   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),balooned\\]"         );        // :this is a heavy check. Counts average balooned         memory usage in % for all powered on vms.
+            Pattern pHostMemStatsActive     = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),active\\]"           );        // :this is a heavy check. Counts average active           memory usage in % for all powered on vms.           
+            Pattern pVmCpuUsed              = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),used\\]"              );        // 
+            Pattern pVmCpuTotal             = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),total\\]"             );        // 
+            Pattern pVmMemPrivate           = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),private\\]"               );        // 
+            Pattern pVmMemShared            = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),shared\\]"                );        // 
+            Pattern pVmMemSwapped           = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),swapped\\]"               );        // 
+            Pattern pVmMemCompressed        = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),compressed\\]"            );        // 
+            Pattern pVmMemOverheadConsumed  = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),overheadConsumed\\]"      );        // 
+            Pattern pVmMemConsumed          = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),consumed\\]"              );        // 
+            Pattern pVmMemBalooned          = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),balooned\\]"              );        // 
+            Pattern pVmMemActive            = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),active\\]"                );        // 
+            Pattern pVmMemSize              = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.memory\\[(.+),total\\]"                 );        // 
+            Pattern pDatastoreFree          = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),free\\]"             );        // 
+            Pattern pDatastoreTotal         = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),total\\]"            );        // 
 
             String found;
             found = checkPattern(pStatus                ,string); if (found != null) { getHostStatus            (found, out); return; }
