@@ -291,6 +291,8 @@ public class VmBix {
             Pattern pHostCpuCores          = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),cores\\]"    );
             Pattern pHostMemUsed           = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),used\\]"         );
             Pattern pHostMemTotal          = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.memory\\[(.+),total\\]"        );
+            Pattern pHostMemStatsActive    = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),active\\]"   );
+            
             Pattern pVmCpuUsed             = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),used\\]"      );
             Pattern pVmCpuTotal            = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),total\\]"     );
             Pattern pVmMemPrivate          = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.mem\\[(.+),private\\]"          );
@@ -311,6 +313,9 @@ public class VmBix {
             found = checkPattern(pHostCpuTotal          ,string); if (found != null) { getHostCpuTotal          (found, out); return; }
             found = checkPattern(pHostMemUsed           ,string); if (found != null) { getHostMemUsed           (found, out); return; }
             found = checkPattern(pHostMemTotal          ,string); if (found != null) { getHostMemTotal          (found, out); return; }
+            
+            found = checkPattern(pHostMemStatsActive    ,string); if (found != null) { getHostVmsStatsActive    (found, out); return; }
+            
             found = checkPattern(pVmCpuUsed             ,string); if (found != null) { getVmCpuUsed             (found, out); return; }
             found = checkPattern(pVmCpuTotal            ,string); if (found != null) { getVmCpuTotal            (found, out); return; }
             found = checkPattern(pVmMemPrivate          ,string); if (found != null) { getVmMemPrivate          (found, out); return; }
@@ -512,6 +517,34 @@ public class VmBix {
                 // + "\nrequest took:" + (end-start));
             }
             out.print(totalMemBytes + "\n");
+            out.flush();
+        }
+
+        private void getHostVmsStatsActive    (String hostName,   PrintWriter out) throws IOException {
+            long start = System.currentTimeMillis();
+            HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
+            Integer amount;
+            int sum = 0;
+            int activeVms = 0;
+            if (host == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No host named '" + hostName + "' found\n");
+                // request took:" + (end-start) + "\n");
+                amount = 0;
+            } else {
+                VirtualMachine[] vms = (host.getVms());
+                for (VirtualMachine vm:vms) {
+                    VirtualMachineSummary vmSummary = vm.getSummary();
+
+                    if (vm.getRuntime().getPowerState().name().equals("poweredOn")){
+                        sum += vmSummary.getQuickStats().getGuestMemoryUsage() * 100 / vmSummary.getConfig().getMemorySizeMB();
+                        activeVms++;
+                    }
+                }
+                // System.out.println("average = " + sum/activeVms);
+                amount = sum/activeVms;
+            }
+            out.print(amount + "\n");
             out.flush();
         }
 
