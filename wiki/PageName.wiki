@@ -1,0 +1,45 @@
+= Introduction =
+
+This page includes some tips not listed on main page. Some information could be related to trunk only as some functionality could be missing in current released versions.
+
+
+= Details =
+
+You may get the list of implemented checks by this command with and:
+{{{
+ant checks
+}}}
+
+which, in fact, runs the following shell command:
+{{{
+$cat src/java/net/djarvur/vmbix/VmBix.java|grep "Pattern p[A-Z]"|cut -d "*" -f 3|sed -E 's/\\//g;s/(.*)\(.*\)(.*)"(.*)\);.*\/\//\1name\2\3/g'
+status[name]                             :checks host status (not vm)
+esx.cpu.load[name,used]              
+esx.cpu.load[name,total]             
+esx.cpu.load[name,cores]             
+esx.memory[name,used]                  
+esx.memory[name,total]                 
+esx.vms.memory[name,private]           :this is a heavy check. Counts average private          memory usage in % for all powered on vms.
+esx.vms.memory[name,shared]            :this is a heavy check. Counts average shared           memory usage in % for all powered on vms.
+esx.vms.memory[name,swapped]           :this is a heavy check. Counts average swapped          memory usage in % for all powered on vms.
+esx.vms.memory[name,compressed]        :this is a heavy check. Counts average compressed       memory usage in % for all powered on vms.
+esx.vms.memory[name,overheadConsumed]  :this is a heavy check. Counts average overheadConsumed memory usage in % for all powered on vms.
+esx.vms.memory[name,consumed]          :this is a heavy check. Counts average consumed         memory usage in % for all powered on vms.
+esx.vms.memory[name,balooned]          :this is a heavy check. Counts average balooned         memory usage in % for all powered on vms.
+esx.vms.memory[name,active]            :this is a heavy check. Counts average active           memory usage in % for all powered on vms.           
+vm.cpu.load[name,used]               
+vm.cpu.load[name,total]              
+vm.memory[name,private]                
+vm.memory[name,shared]                 
+vm.memory[name,swapped]                
+vm.memory[name,compressed]             
+vm.memory[name,overheadConsumed]       
+vm.memory[name,consumed]               
+vm.memory[name,balooned]               
+vm.memory[name,active]                 
+vm.memory[name,total]                  
+datastore.size[name,free]              
+datastore.size[name,total]
+}}}
+
+This command is tested only on Mac.
