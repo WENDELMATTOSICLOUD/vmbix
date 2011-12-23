@@ -124,5 +124,10 @@
 	<target name="make" depends="compile, jar, store, zip"/>
 	
 	<target name="all" depends="get.libs, compile, jar, store"/>
-	
+	<target name="checks">
+		<echo>${cheks.cmd}</echo>
+		<exec executable="/bin/sh">
+		  <arg value="${java.src}/../ant/showChecks.sh"/>
+		</exec>
+	</target>
 </project> 
