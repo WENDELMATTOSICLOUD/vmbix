@@ -5,7 +5,7 @@ This page includes some tips not listed on main page. Some information could be 
 
 = Details =
 
-You may get the list of implemented checks by this command with and:
+You may get the list of implemented checks by this command:
 {{{
 ant checks
 }}}
