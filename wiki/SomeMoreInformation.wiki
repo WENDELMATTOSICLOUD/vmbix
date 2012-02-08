@@ -44,3 +44,44 @@ datastore.size[name,total]
 }}}
 
 This command is tested only on Mac.
+
+= How to implement your own checks =
+ # Find a function called
+{{{
+private void checkAllPatterns                (String string, PrintWriter out  )
+}}}
+ # Add your own pattern. For example this string:
+{{{
+Pattern pHostCpuUsed            = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.cpu\\.load\\[(.+),used\\]"             );        // :checks host cpu usage
+}}}
+will be responsible for this item:
+{{{
+esx.cpu.load[{HOST.DNS},used]
+}}}
+ # Scroll down to the next block of code in the same function starting with "String found;", add you own "found=" block:
+{{{
+found = checkPattern(pHostCpuUsed           ,string); if (found != null) { getHostCpuUsed           (found, out); return; }
+}}}
+This one calls a function called "getHostCpuUsed" with {HOST.DNS} as an a first argument and a PrintWriter instance as a second one.
+ # Your function should accept String and PrintWriter arguments. It should return values like that:
+{{{
+out.print(value + "\n");
+out.flush();
+}}}
+
+= Version history =
+
+1.0.1
+ * Fixed host used memory checks(returned cpu used MHz instead of memory used MB), fixed a custom multiplier for the same item.
+ * Added several items:
+  * Average private          memory usage in % for all powered on vms.
+  * Average shared           memory usage in % for all powered on vms.
+  * Average swapped          memory usage in % for all powered on vms.
+  * Average compressed       memory usage in % for all powered on vms.
+  * Average overheadConsumed memory usage in % for all powered on vms.
+  * Average consumed         memory usage in % for all powered on vms.
+  * Average balooned         memory usage in % for all powered on vms.
+  * Average active           memory usage in % for all powered on vms.
+
+1.0.0
+ * First release
