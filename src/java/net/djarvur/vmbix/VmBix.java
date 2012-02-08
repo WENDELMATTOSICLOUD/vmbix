@@ -276,7 +276,7 @@ public class VmBix {
             this.serviceInstance    = request.serviceInstance;
             this.inventoryNavigator = request.inventoryNavigator;
         }
-        static private String checkPattern (Pattern pattern, String string) {
+        static private String checkPattern           (Pattern pattern, String string  )                    {
             Matcher matcher = pattern.matcher(string);
             if (matcher.find()){
                 return matcher.group(1);
@@ -483,26 +483,26 @@ public class VmBix {
         private void getHostMemUsed                  (String hostName, PrintWriter out) throws IOException {
             long start = System.currentTimeMillis();
             HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
-            Integer usedMhz;
+            Integer usedMB;
             if (host == null) {
                 long end = System.currentTimeMillis();
                 System.out.print("No host named '" + hostName + "' found\n");
                 // request took:" + (end-start) + "\n");
-                usedMhz = 0;
+                usedMB = 0;
             } else {
                 HostListSummary hostSummary = host.getSummary();
                 HostListSummaryQuickStats hostQuickStats = hostSummary.getQuickStats();
 
                 // host.getResourcePool();
-                usedMhz = hostQuickStats.getOverallCpuUsage();
-                if (usedMhz == null) {
-                    usedMhz = 0;
+                usedMB = hostQuickStats.getOverallMemoryUsage();
+                if (usedMB == null) {
+                    usedMB = 0;
                 }
                 long end = System.currentTimeMillis();
                 // System.out.println("host " + hostName + " memory used: " + usedMhz
                 // + "\nrequest took:" + (end-start));
             }
-            out.print(usedMhz + "\n");
+            out.print(usedMB + "\n");
             out.flush();
         }
         
