@@ -222,7 +222,7 @@ public class VmBix {
             updateConnection();
         }
         catch (IOException e){
-            System.out.println("thread sleep error: " + e.toString() );
+            System.out.println("Connection update error: " + e.toString() );
         }
         return new Request (serviceInstance, null, inventoryNavigator); 
     }
