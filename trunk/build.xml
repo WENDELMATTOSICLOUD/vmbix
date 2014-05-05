@@ -43,6 +43,11 @@
 		<mkdir dir="${downloaded}"/>
 		<get src="${vijavaurl}" dest="${downloaded}/vijava.zip" verbose="true" usetimestamp="true"/>
 	</target>
+
+        <target name="download.gson">
+                <mkdir dir="${downloaded}"/>
+                <get src="${gsonurl}" dest="${downloaded}/gson.zip" verbose="true" usetimestamp="true"/>
+        </target>
 	
 	<target name="unzip.jargs">
 		<unzip src="${downloaded}/jargs.zip" dest="${downloaded}/jargs">
@@ -52,6 +57,15 @@
 			</patternset>
 		</unzip>
 	</target>
+
+        <target name="unzip.gson">
+                <unzip src="${downloaded}/gson.zip" dest="${downloaded}/gson">
+                        <patternset>
+                                <include name="**/*.jar"/>
+                                <exclude name="**/*test*.jar"/>
+                        </patternset>
+                </unzip>
+        </target>
 	
 	<target name="copy.vijava">
 		<mkdir dir="${lib.dir}"/>
@@ -72,9 +86,19 @@
 		</copy>
 	</target>
 
+        <target name="copy.gson" depends="unzip.gson">
+                <mkdir dir="${lib.dir}"/>
+                <copy todir="${lib.dir}" flatten="true">
+                        <fileset dir="${downloaded}/gson">
+                                <include name="**/*.jar"/>
+                        </fileset>
+                </copy>
+        </target>
+
 	<target name="get.jargs" depends="download.jargs, copy.jargs"/>
 	<target name="get.vijava" depends="download.vijava, copy.vijava"/>
-	<target name="get.libs" depends="get.vijava, get.jargs"/>
+        <target name="get.gson" depends="download.gson, copy.gson"/>
+	<target name="get.libs" depends="get.vijava, get.jargs, get.gson"/>
 	
 	<target name="store">
 		<delete dir="${store.dir}"/>

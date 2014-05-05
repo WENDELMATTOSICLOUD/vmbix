@@ -1,4 +1,4 @@
-ver=1.0.1
+ver=1.1.0
 lib.dir=lib
 pkgname=net.djarvur.vmbix.
 # pkgname=
@@ -15,6 +15,7 @@ rpmbased.src=src/rpm-based
 downloaded=downloaded
 jargsurl=http://sourceforge.net/projects/jargs/files/latest/download?source=files
 vijavaurl=http://sourceforge.net/projects/vijava/files/latest/download?source=files
+gsonurl=https://google-gson.googlecode.com/files/google-gson-2.2.4-release.zip
 
 cheks.cmd=cat ${java.src}/net/djarvur/vmbix/VmBix.java|grep "Pattern p[A-Z]"|cut -d "*" -f 3|sed -E 's/\\\\//g;s/(.*)\\(.*\\)(.*)"(.*)\\);.*\\/\\//\\1name\\2\\3/g'
 
