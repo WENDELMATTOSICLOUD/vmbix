@@ -32,7 +32,7 @@ ant
 Ant should download required jargs and vijava libraries, compile the sources and place compiled code to VmBix?-$version folder.
 
 ==Download precompiled zip archive==
-  # Download the latest version from [https://drive.google.com/folderview?id=0B5yTt_W73cDTMEthWFZHYVplU0E&usp=sharing here] in zip format. The downloads section of the Google Code project is deprecated.
+  # Download the latest version from [https://drive.google.com/folderview?id=0B5yTt_W73cDTMEthWFZHYVplU0E&usp=sharing#list here] in zip format. The downloads section of the Google Code project is deprecated.
   # unzip. You should get a VmBix-$version folder.
 
 ==Installation==
