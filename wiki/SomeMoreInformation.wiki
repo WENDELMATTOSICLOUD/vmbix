@@ -118,6 +118,7 @@ out.flush();
   # zabbix_get -s localhost -p 12050 -k vm.counter[VMNAME,cpu.ready,,200] 
 491
   }}}
+  An addtional *interval parameter was added to the configuration file to specify the default interval for the performance counter queries.
   * VM Tools status methods
   * ping : always returns 1, to check vmbix availability
   * about : display vCenter SDK version
