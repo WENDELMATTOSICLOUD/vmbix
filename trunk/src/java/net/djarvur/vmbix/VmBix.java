@@ -162,14 +162,17 @@ public class VmBix {
         if (port   == null) {sport = "\u001B[5m"+ sport + "\u001B[0m";}
         
         System.err.print(
-            "Usage:\nvmbix "
+            "VmBix version 1.1.1\n"
+            + "Usage:\nvmbix "
             + sport + " " + ssurl + " " + sname + " " + spass + " [-f|--pid pidfile] [-i|--interval interval]" + "\n"
             + "or\nvmbix [-c|--config] config_file  [-f|--pid pidfile] [-i|--interval interval]\n\n"
             + "Available methods :                                  \n"
             + "about                                                \n"                                                                                    
             + "datastore.discovery                                  \n"                                                                                    
             + "datastore.size[name,free]                            \n"                                                                                    
-            + "datastore.size[name,total]                           \n"                                                                                    
+            + "datastore.size[name,total]                           \n"
+            + "datastore.size[name,provisioned]                     \n"                                                                                    
+            + "datastore.size[name,uncommitted]                     \n"               
             + "esx.connection[name]                                 \n"                                                                                    
             + "esx.cpu.load[name,cores]                             \n"                                                                                    
             + "esx.cpu.load[name,total]                             \n"                                                                                    
@@ -191,6 +194,7 @@ public class VmBix {
             + "esx.vms.memory[name,private]                         \n"
             + "esx.vms.memory[name,shared]                          \n"
             + "esx.vms.memory[name,swapped]                         \n"
+            + "esx.counter[name,counter,[instance,interval]]        \n"                                                                                                
             + "event.latest[*]                                      \n"                                                                                    
             + "counters[name]                                       \n"                                                                                    
             + "ping                                                 \n"                                                                                    
@@ -395,6 +399,7 @@ public class VmBix {
             Pattern pHostMemStatsConsumed   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),consumed\\]"         );        // :this is a heavy check. Counts average consumed         memory usage in % for all powered on vms.
             Pattern pHostMemStatsBallooned  = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),ballooned\\]"        );        // :this is a heavy check. Counts average ballooned         memory usage in % for all powered on vms.
             Pattern pHostMemStatsActive     = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.vms.memory\\[(.+),active\\]"           );        // :this is a heavy check. Counts average active           memory usage in % for all powered on vms.           
+            Pattern pHostPerfCounterValue   = Pattern.compile("^(?:\\s*ZBXD.)?.*esx\\.counter\\[([^,]+),([^,]+)(?:,([^,]*))?(?:,([^,]*))?\\]" );                    
             Pattern pVmCpuUsed              = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),used\\]"              );        // 
             Pattern pVmCpuTotal             = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),total\\]"             );        // 
             Pattern pVmCpuCores             = Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.cpu\\.load\\[(.+),cores\\]"             );        // 
@@ -427,6 +432,8 @@ public class VmBix {
             Pattern pVmToolsInstallerMounted= Pattern.compile("^(?:\\s*ZBXD.)?.*vm\\.guest\\.tools\\.mounted\\[(.+)\\]"      );        //      
             Pattern pDatastoreFree          = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),free\\]"             );        // 
             Pattern pDatastoreTotal         = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),total\\]"            );        // 
+            Pattern pDatastoreProvisioned   = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),provisioned\\]"      );        // 
+            Pattern pDatastoreUncommitted   = Pattern.compile("^(?:\\s*ZBXD.)?.*datastore\\.size\\[(.+),uncommitted\\]"      );        //            
 
             String found;
             String[] founds;
@@ -456,6 +463,7 @@ public class VmBix {
             found = checkPattern(pHostMemStatsConsumed  ,string); if (found != null) { getHostVmsStatsConsumed  (found, out); return; }
             found = checkPattern(pHostMemStatsBallooned ,string); if (found != null) { getHostVmsStatsBallooned (found, out); return; }
             found = checkPattern(pHostMemStatsActive    ,string); if (found != null) { getHostVmsStatsActive    (found, out); return; }
+            founds = checkMultiplePattern(pHostPerfCounterValue   ,string); if (founds != null) { getHostPerfCounterValue         (founds,  out); return; }                        
             found = checkPattern(pVmCpuUsed             ,string); if (found != null) { getVmCpuUsed             (found, out); return; }
             found = checkPattern(pVmCpuTotal            ,string); if (found != null) { getVmCpuTotal            (found, out); return; }
             found = checkPattern(pVmCpuCores            ,string); if (found != null) { getVmCpuCores            (found, out); return; }
@@ -479,16 +487,18 @@ public class VmBix {
             found = checkPattern(pVmGuestHostName       ,string); if (found != null) { getVmGuestHostName       (found, out); return; }
             found = checkPattern(pVmGuestIpAddress      ,string); if (found != null) { getVmGuestIpAddress      (found, out); return; }
             found = checkPattern(pVmGuestDisks          ,string); if (found != null) { getVmGuestDisks          (found, out); return; }
-            founds = checkMultiplePattern(pVmGuestDiskCapacity          ,string); if (founds != null) { getVmGuestDiskCapacity          (founds[0], founds[1], out); return; }
-            founds = checkMultiplePattern(pVmGuestDiskFreeSpace         ,string); if (founds != null) { getVmGuestDiskFreeSpace         (founds[0], founds[1], out); return; }
-            founds = checkMultiplePattern(pVmPerfCounterValue                ,string); if (founds != null) { getVmPerfCounterValue                  (founds,  out); return; }            
-            found = checkPattern(pVmGuestToolsRunningStatus       ,string); if (found != null) { getVmGuestToolsRunningStatus      (found, out); return; }
-            found = checkPattern(pVmGuestToolsVersionStatus       ,string); if (found != null) { getVmGuestToolsVersionStatus      (found, out); return; }
-            found = checkPattern(pVmToolsInstallerMounted         ,string); if (found != null) { getVmToolsInstallerMounted        (found, out); return; }
+            founds = checkMultiplePattern(pVmGuestDiskCapacity    ,string); if (founds != null) { getVmGuestDiskCapacity          (founds[0], founds[1], out); return; }
+            founds = checkMultiplePattern(pVmGuestDiskFreeSpace   ,string); if (founds != null) { getVmGuestDiskFreeSpace         (founds[0], founds[1], out); return; }
+            founds = checkMultiplePattern(pVmPerfCounterValue     ,string); if (founds != null) { getVmPerfCounterValue           (founds,  out); return; }            
+            found = checkPattern(pVmGuestToolsRunningStatus       ,string); if (found != null) { getVmGuestToolsRunningStatus     (found, out); return; }
+            found = checkPattern(pVmGuestToolsVersionStatus       ,string); if (found != null) { getVmGuestToolsVersionStatus     (found, out); return; }
+            found = checkPattern(pVmToolsInstallerMounted         ,string); if (found != null) { getVmToolsInstallerMounted       (found, out); return; }
             found = checkPattern(pVmConsolidationNeeded ,string); if (found != null) { getVmConsolidationNeeded (found, out); return; }
             found = checkPattern(pHostCpuCores          ,string); if (found != null) { getHostCpuCores          (found, out); return; }
             found = checkPattern(pDatastoreFree         ,string); if (found != null) { getDatastoreSizeFree     (found, out); return; }
             found = checkPattern(pDatastoreTotal        ,string); if (found != null) { getDatastoreSizeTotal    (found, out); return; }
+            found = checkPattern(pDatastoreProvisioned  ,string); if (found != null) { getDatastoreSizeProvisioned (found, out); return; } 
+            found = checkPattern(pDatastoreUncommitted  ,string); if (found != null) { getDatastoreSizeUncommitted (found, out); return; }             
             
             System.out.println("String '" + string + "' not supported");
             out.print("ZBX_NOTSUPPORTED\n");
@@ -1427,6 +1437,129 @@ public class VmBix {
             }
             out.flush();
         }
+        
+       /**
+        * Returns a performance counter value for a host
+        * The params array contains :
+        * - the host name
+        * - the performance counter name
+        * - an optional instance name (for example "nic0")
+        * - an optional query interval (default is defined in the configuration file with the "interval" keyword)
+        * We don't query the vCenter for historical, but real-time data.
+        * So as to collect the most accurate data, we gather a series of real-time (20s interval)
+        * values over the defined interval. For rate and absolute values, we calculate the average value.
+        * For delta values, we sum the results.
+        */          
+        private void getHostPerfCounterValue (String[] params, PrintWriter out) throws IOException {
+            String hostName = params[0];
+            String perfCounterName = params[1];
+            String instanceName = "";
+            if (params[2] != null) {
+              instanceName = params[2];
+            }
+            Integer newInterval = interval;
+            if (params[3] != null) {
+              newInterval = Integer.parseInt(params[3]);
+            }
+            long start = System.currentTimeMillis();
+            HostSystem host = (HostSystem)getManagedEntityByName(hostName,"HostSystem");
+            Long intValue;
+            if (host == null) {
+                long end = System.currentTimeMillis();
+                System.out.print("No host named '" + hostName + "' found\n");
+            } else {
+              HostRuntimeInfo hostrti = host.getRuntime();
+              String pState = hostrti.getPowerState().toString();
+              if (pState.equals("poweredOn")) {
+                PerformanceManager performanceManager = serviceInstance.getPerformanceManager();
+
+                // find out the refresh rate for the virtual machine
+                PerfProviderSummary pps = performanceManager.queryPerfProviderSummary(host);
+
+                // retrieve all the available performance counters
+                PerfCounterInfo[] pcis = performanceManager.getPerfCounter();
+                Hashtable ctrTable = new Hashtable(pcis.length * 2);
+                Hashtable typeTable = new Hashtable(pcis.length * 2);
+                for(int i = 0; i < pcis.length; i++) {
+                  String perfCounter  = pcis[i].getGroupInfo().getKey() + "." + pcis[i].getNameInfo().getKey();
+                  Integer perfKey = pcis[i].getKey();
+                  ctrTable.put(perfCounter, perfKey); 
+                  
+                  String perfType = pcis[i].getStatsType().toString();
+                  typeTable.put(perfCounter, perfType); 
+                }
+                Integer perfCounterId = (Integer)ctrTable.get(perfCounterName);
+                String perfCounterType = (String)typeTable.get(perfCounterName);
+                
+                ArrayList<PerfMetricId> perfMetricIds = new ArrayList<PerfMetricId>();
+                Boolean exists = true;
+
+                PerfMetricId metricId = new PerfMetricId();
+                metricId.setCounterId(perfCounterId);
+                metricId.setInstance(instanceName);
+                perfMetricIds.add(metricId);
+                
+                if (exists == false) {
+                  System.out.println("Metric " + perfCounterName + " doesn't exist for host " + hostName);
+                  long end = System.currentTimeMillis();
+                  intValue = 0L;
+                } else {
+                  PerfMetricId[] pmi = perfMetricIds.toArray(new PerfMetricId[perfMetricIds.size()]);
+
+                  PerfQuerySpec qSpec = new PerfQuerySpec();
+                  Calendar previous = Calendar.getInstance();
+                  Calendar current = (Calendar)previous.clone();
+                  Date old = new Date(previous.getTimeInMillis() - (newInterval*1000));
+                  previous.setTime(old);
+                  
+                  qSpec.setEntity(host.getMOR());
+                  qSpec.setStartTime(previous);
+                  qSpec.setEndTime(current);
+                  qSpec.setMetricId(pmi);
+                  qSpec.setIntervalId(20); // real-time values
+   
+                  PerfEntityMetricBase[] pValues = performanceManager.queryPerf(new PerfQuerySpec[] {qSpec});
+                  intValue = 0L;
+                  if(pValues != null) {
+                    for(int i=0; i<pValues.length; ++i) {
+                      if(pValues[i] instanceof PerfEntityMetric)
+                      {
+                        PerfEntityMetric pem = (PerfEntityMetric)pValues[i];
+                        PerfMetricSeries[] vals = pem.getValue();
+                        for(int j=0; vals!=null && j<vals.length; ++j)
+                        {
+                          PerfMetricIntSeries val = (PerfMetricIntSeries) vals[j];
+                          long[] longs = val.getValue();
+                          long sum = 0;
+                          //String instance = val.getId().getInstance();
+                          for(int k=0; k<longs.length; k++)
+                          {
+                            sum = sum + longs[k];
+                          }
+                          if (perfCounterType.equals("delta")) {
+                            intValue = sum;
+                          } else {
+                            // calculate average
+                            intValue = sum / longs.length;
+                          }
+                          out.print(intValue);
+                        }
+                      } else {
+                        System.out.println("No returned value");
+                      }
+                    }
+                  } else {
+                    System.out.println("No returned value");
+                  }
+                  long end = System.currentTimeMillis();
+                }
+              } else {
+                long end = System.currentTimeMillis();
+                System.out.print("Host '" + hostName + "' is not powered on. Performance counters unavailable.\n");
+              }
+            }
+            out.flush();
+        }        
 
        /**
         * Returns the list of available performance counters of an entity
@@ -2117,6 +2250,60 @@ public class VmBix {
             out.print(capacity );
             out.flush();
         }
+
+       /**
+        * Returns the provisioned size of a datastore
+        */          
+        private void getDatastoreSizeProvisioned            (String dsName,   PrintWriter out) throws IOException { 
+            long start = System.currentTimeMillis(); 
+            Datastore ds = (Datastore)getManagedEntityByName(dsName,"Datastore"); 
+            Long provSpace; 
+            if (ds == null) { 
+                long end = System.currentTimeMillis(); 
+                System.out.print("No datastore named '" + dsName + "' found\n"); 
+                // request took:" + (end-start) + "\n"); 
+                provSpace = new Long(0); 
+            } else {
+                DatastoreSummary dsSum = ds.getSummary(); 
+                long total  = dsSum.getCapacity();
+                long free   = dsSum.getFreeSpace(); 
+                long uncom  = dsSum.getUncommitted(); 
+                long temp   = total - free + uncom; 
+                provSpace   = temp; 
+                if (provSpace == null) { 
+                    provSpace = new Long(0); 
+                } 
+                // System.out.println("store " + dsName +" free: " + freeSpace 
+                // + "\n it took " + (System.currentTimeMillis() - start) ); 
+            } 
+            out.print(provSpace); 
+            out.flush(); 
+        } 
+
+               /**
+        * Returns the uncommitted size of a datastore
+        */  
+        private void getDatastoreSizeUncommitted            (String dsName,   PrintWriter out) throws IOException { 
+            long start = System.currentTimeMillis(); 
+            Datastore ds = (Datastore)getManagedEntityByName(dsName,"Datastore"); 
+            Long freeSpace; 
+            if (ds == null) { 
+                long end = System.currentTimeMillis(); 
+                System.out.print("No datastore named '" + dsName + "' found\n"); 
+                // request took:" + (end-start) + "\n"); 
+                freeSpace = new Long(0); 
+            } else { 
+                DatastoreSummary dsSum = ds.getSummary(); 
+                freeSpace = dsSum.getUncommitted(); 
+                if (freeSpace == null) { 
+                    freeSpace = new Long(0); 
+                } 
+                // System.out.println("store " + dsName +" free: " + freeSpace 
+                // + "\n it took " + (System.currentTimeMillis() - start) ); 
+            } 
+            out.print(freeSpace); 
+            out.flush(); 
+        }          
 
         public void run (){
             System.out.println("thread created, collecting data in " + (Thread.activeCount() - 1) + " threads" );
