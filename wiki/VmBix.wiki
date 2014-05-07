@@ -119,6 +119,8 @@ about
 datastore.discovery
 datastore.size[name,free]
 datastore.size[name,total]
+datastore.size[name,provisioned]
+datastore.size[name,uncommitted]
 esx.connection[name]
 esx.cpu.load[name,cores]
 esx.cpu.load[name,total]
@@ -140,6 +142,7 @@ esx.vms.memory[name,overheadConsumed]
 esx.vms.memory[name,private]
 esx.vms.memory[name,shared]
 esx.vms.memory[name,swapped]
+esx.counter[name,counter,[instance,interval]]
 event.latest[*]
 counters[name]
 ping
@@ -173,6 +176,8 @@ vm.powerstate[name]
 vm.status[name]
 vm.storage.committed[name]
 vm.storage.uncommitted[name]
+vm.storage.unshared[name]
+
 }}}
 You can check any of these like this:
 
